@@ -1,0 +1,11 @@
+image: openjdk:14-alpine
+
+stages:
+  - deploy
+
+
+deploy:
+  stage: deploy
+  script:
+    - ./gradlew clean build
+    - ls /builds/mohan.rukmangadhachar/testjava/build/libs
