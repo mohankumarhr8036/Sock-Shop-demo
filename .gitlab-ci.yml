@@ -9,3 +9,31 @@ deploy:
   script:
     - ./gradlew clean build
     - ls /builds/mohan.rukmangadhachar/testjava/build/libs
+
+
+image: gradle:alpine
+
+stages:
+  - build
+  - test
+
+variables:
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+
+before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+
+
+build:
+  stage: build
+  script:
+    gradle --build-cache build
+  artifacts:
+    paths:
+      - build/libs/*.jar
+    expire_in: 1 week
+
+test:
+  stage: test
+  script:
+    gradle check
