@@ -86,3 +86,8 @@ resource "aws_lambda_permission" "apigw_lambda" {
 	- inside code invoke the child lambda
 - create API gaetway with new resource GET method to invoke parent lambda by passing input parameters to the code.
 
+		
+	
+task('execute1').doLast {
+    println "execute1 in $project.name"
+}
