@@ -41,3 +41,181 @@ test:
 
 cGwyZDQ3NDpQcml5YTQxNyo=
 
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Node FaaS Reference Application",
+    "version": "1.0.0",
+    "title": "PI FaaS Reference API"
+  },
+  "basePath": "/v1/faas/reference",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/images": {
+      "post": {
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "201 response"
+          },
+          "400": {
+            "description": "400 response"
+          },
+          "500": {
+            "description": "500 response"
+          }
+        },
+        "security": [
+          {
+            "aws-lambda-authorizer": [
+
+            ]
+          },
+          {
+            "usaa-oauth2": [
+              "employee",
+              "msr"
+            ]
+          }
+        ],
+        "x-amazon-apigateway-integration": {
+          "uri": "${uploader_lambda_invoke_arn}",
+          "responses": {
+            "default": {
+              "statusCode": "201"
+            }
+          },
+          "passthroughBehavior": "when_no_match",
+          "httpMethod": "POST",
+          "contentHandling": "CONVERT_TO_TEXT",
+          "type": "aws_proxy"
+        }
+      }
+    },
+    "/images/{imageKey}": {
+      "get": {
+        "produces": [
+          "application/json",
+          "image/jpg",
+          "image/jpeg",
+          "image/png",
+          "image/gif"
+        ],
+        "parameters": [
+          {
+            "name": "resized",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "imageKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200 response"
+          },
+          "400": {
+            "description": "400 response"
+          },
+          "500": {
+            "description": "500 response"
+          },
+          "404": {
+            "description": "404 response"
+          }
+        },
+        "security": [
+          {
+            "aws-lambda-authorizer": [
+
+            ]
+          },
+          {
+            "usaa-oauth2": [
+              "employee",
+              "msr"
+            ]
+          }
+        ],
+        "x-amazon-apigateway-integration": {
+          "uri": "${getter_lambda_invoke_arn}",
+          "responses": {
+            "default": {
+              "statusCode": "200"
+            }
+          },
+          "passthroughBehavior": "when_no_match",
+          "httpMethod": "POST",
+          "contentHandling": "CONVERT_TO_TEXT",
+          "type": "aws_proxy"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "aws-lambda-authorizer": {
+      "type": "apiKey",
+      "name": "api-key",
+      "in": "header",
+      "x-amazon-apigateway-authtype": "custom",
+      "x-amazon-apigateway-authorizer": {
+        "authorizerUri": "${auth_lambda_invoke_arn}",
+        "authorizerCredentials": "${auth_invoke_role_arn}",
+        "authorizerResultTtlInSeconds": 0,
+        "identitySource": "method.request.header.id-claim",
+        "type": "request"
+      }
+    },
+    "usaa-oauth2": {
+      "type": "oauth2",
+      "description": "OAuth2 Specification",
+      "authorizationUrl": "",
+      "flow": "implicit",
+      "scopes": {
+        "web": "Web Scope for Member Facing USAA.COM websites",
+        "msr": "MSR Scope for MSR Portal based Applications",
+        "mobile": "Mobile Scope for USAA Mobile Applications",
+        "employee": "Employee Scope for Internal USAA Applications"
+      }
+    }
+  },
+  "x-amazon-apigateway-policy": {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Sid": "",
+        "Effect": "Allow",
+        "Principal": {
+          "AWS": "*"
+        },
+        "Action": "execute-api:Invoke",
+        "Resource": "*",
+        "Condition": {
+          "StringLike": {
+            "aws:sourceVpce": "${vpce_id}"
+          }
+        }
+      }
+    ]
+  },
+  "x-amazon-apigateway-endpoint-configuration": {
+    "vpcEndpointIds": [
+      "${vpce_id}"
+    ]
+  },
+  "x-amazon-apigateway-binary-media-types": [
+    "image/png",
+    "image/jpg",
+    "image/jpeg",
+    "image/gif"
+  ]
+}
