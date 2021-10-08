@@ -208,3 +208,43 @@ else:
     print('Instance is not managed by SSM, unable to execute commands remotely')
     remove_EC2_IAM_role(ec2Client, instance_id)
 
+def check(email):  
+  
+    # pass the regular expression 
+    # and the string in search() method 
+    if(re.search(regex,email)):  
+        return  
+          
+    else:  
+        print("Invalid Email address provided.") 
+        exit() 
+
+# Default Emailbox account
+fromEmailID = None
+
+# Validate default mail account
+def validateMailbox(defaultMailAccount):
+	import win32com.client
+	global fromEmailID
+	o = win32com.client.Dispatch("Outlook.Application")
+	for account in o.Session.Accounts:
+		if re.search(account.SmtpAddress, defaultMailAccount, re.IGNORECASE):
+			fromEmailID = account
+			break
+	if fromEmailID:
+		return
+	else:
+		print("Local mailbox account not found, please try with valid one")
+		exit()
+        
+def send_email(subject,text):
+    import win32com.client
+    # s = win32com.client.Dispatch("Mapi.Session")
+    o = win32com.client.Dispatch("Outlook.Application")
+    # s.Logon("Outlook2003")
+    Msg = o.CreateItem(0)
+    Msg._oleobj_.Invoke(*(64209, 0, 8, 0, fromEmailID))
+    Msg.To = emailid
+    Msg.Subject = subject
+    Msg.Body = text
+    Msg.Send()
