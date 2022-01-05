@@ -1,0 +1,7 @@
+Created approval instance author and publisher from persistence volume to deploy AEM packages etc..
+
+Integrated CI/CD with new approval branch to push code/packages to new approval instance 
+
+Integrated New release branch to merge changes from approval branch and deploy changes will push automatically to test environment
+
+ Configured Okta to new approval instance for single sign on
