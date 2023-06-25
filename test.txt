@@ -5,3 +5,31 @@ Integrated CI/CD with new approval branch to push code/packages to new approval 
 Integrated New release branch to merge changes from approval branch and deploy changes will push automatically to test environment
 
  Configured Okta to new approval instance for single sign on
+
+
+[19/Jun/2023 07:06:37] ERROR [dojo.api_v2.exception_handler:32] name 'reverse' is not defined
+Traceback (most recent call last):
+  File "/opt/app-root/lib64/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/opt/app-root/lib64/python3.8/site-packages/rest_framework/mixins.py", line 19, in create
+    self.perform_create(serializer)
+  File "/app/./dojo/api_v2/views.py", line 2196, in perform_create
+    serializer.save(push_to_jira=push_to_jira)
+  File "/app/./dojo/api_v2/serializers.py", line 1719, in save
+    reimporter.reimport_scan(scan, scan_type, test, active=active, verified=verified,
+  File "/app/./dojo/importers/reimporter/reimporter.py", line 387, in reimport_scan
+    serial_new_findings, serial_reactivated_findings, serial_findings_to_mitigate, serial_untouched_findings = results.get()
+  File "/opt/app-root/lib64/python3.8/site-packages/celery/result.py", line 224, in get
+    return self.backend.wait_for_pending(
+  File "/opt/app-root/lib64/python3.8/site-packages/celery/backends/base.py", line 764, in wait_for_pending
+    return result.maybe_throw(propagate=propagate, callback=callback)
+  File "/opt/app-root/lib64/python3.8/site-packages/celery/result.py", line 336, in maybe_throw
+    self.throw(value, self._to_remote_traceback(tb))
+  File "/opt/app-root/lib64/python3.8/site-packages/celery/result.py", line 329, in throw
+    self.on_ready.throw(*args, **kwargs)
+  File "/opt/app-root/lib64/python3.8/site-packages/vine/promises.py", line 234, in throw
+    reraise(type(exc), exc, tb)
+  File "/opt/app-root/lib64/python3.8/site-packages/vine/utils.py", line 30, in reraise
+    raise value
+NameError: name 'reverse' is not defined
+ERROR:dojo.api_v2.exception_handler:name 'reverse' is not defined
